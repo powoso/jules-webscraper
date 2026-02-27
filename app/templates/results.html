@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>History for Job #{{ job['id'] }}</h2>
+<p>URL: <a href="{{ job['url'] }}" target="_blank">{{ job['url'] }}</a></p>
+<p>Selector: <code>{{ job['selector'] }}</code></p>
+<a href="{{ url_for('index') }}" class="btn btn-secondary mb-3">Back to Jobs</a>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Timestamp</th>
+      <th>Content</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for result in results %}
+    <tr>
+      <td>{{ result['timestamp'] }}</td>
+      <td><pre>{{ result['content'] }}</pre></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

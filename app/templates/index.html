@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Web Scraper Jobs</h2>
+
+<div class="card my-4">
+  <div class="card-header">Add New Job</div>
+  <div class="card-body">
+    <form action="{{ url_for('add_job') }}" method="post">
+      <div class="mb-3">
+        <label for="url" class="form-label">URL</label>
+        <input type="url" class="form-control" id="url" name="url" required>
+      </div>
+      <div class="mb-3">
+        <label for="selector" class="form-label">CSS Selector</label>
+        <input type="text" class="form-control" id="selector" name="selector" required>
+      </div>
+      <div class="mb-3">
+        <label for="interval" class="form-label">Check Interval (minutes)</label>
+        <input type="number" class="form-control" id="interval" name="interval" min="1" value="60" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Job</button>
+    </form>
+  </div>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>URL</th>
+      <th>Selector</th>
+      <th>Interval (min)</th>
+      <th>Last Run</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for job in jobs %}
+    <tr>
+      <td>{{ job['id'] }}</td>
+      <td>{{ job['url'] }}</td>
+      <td>{{ job['selector'] }}</td>
+      <td>{{ job['interval_minutes'] }}</td>
+      <td>{{ job['last_run'] }}</td>
+      <td>
+        <a href="{{ url_for('job_results', job_id=job['id']) }}" class="btn btn-sm btn-info">History</a>
+        <form action="{{ url_for('delete_job', job_id=job['id']) }}" method="post" style="display:inline;">
+          <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
