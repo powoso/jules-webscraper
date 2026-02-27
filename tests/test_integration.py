@@ -27,6 +27,9 @@ def client_with_scheduler():
     # Start scheduler
     scheduler_service.start_scheduler()
 
+    # Clean scheduler for this test run
+    scheduler_service.scheduler.remove_all_jobs()
+
     with app.test_client() as client:
         yield client
 

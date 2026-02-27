@@ -1,25 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>History for Job #{{ job['id'] }}</h2>
-<p>URL: <a href="{{ job['url'] }}" target="_blank">{{ job['url'] }}</a></p>
-<p>Selector: <code>{{ job['selector'] }}</code></p>
-<a href="{{ url_for('index') }}" class="btn btn-secondary mb-3">Back to Jobs</a>
+<div class="d-flex align-items-center mb-4">
+  <a href="{{ url_for('index') }}" class="btn btn-outline-secondary me-3">
+    <i class="fas fa-arrow-left"></i> Back
+  </a>
+  <h2 class="mb-0">History: <span class="text-primary">{{ job['url'] }}</span></h2>
+</div>
 
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Timestamp</th>
-      <th>Content</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for result in results %}
-    <tr>
-      <td>{{ result['timestamp'] }}</td>
-      <td><pre>{{ result['content'] }}</pre></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <p class="mb-1 text-muted">Selector</p>
+        <h5><code>{{ job['selector'] }}</code></h5>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <p class="mb-1 text-muted">Interval</p>
+        <h5>Every {{ job['interval_minutes'] }} mins</h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if results %}
+<div class="timeline">
+  {% for result in results %}
+  <div class="card mb-3 border-start border-4 border-info">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+      <span class="fw-bold"><i class="far fa-clock me-2"></i>{{ result['timestamp'] }}</span>
+      <span class="badge bg-secondary">Change Detected</span>
+    </div>
+    <div class="card-body p-0">
+      <pre class="m-0 p-3 bg-dark text-light" style="max-height: 300px; overflow-y: auto;"><code>{{ result['content'] }}</code></pre>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+  <i class="fas fa-info-circle me-2"></i> No history available for this job yet. Run the job manually or wait for the scheduled interval.
+</div>
+{% endif %}
 {% endblock %}
